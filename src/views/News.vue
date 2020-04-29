@@ -43,19 +43,26 @@
         </v-col>
       </v-row>
     </v-container>
-    <NewsLoader />
+    <v-container>
+      <v-row> 
+        <NewsCard v-for="news in newss" :key="news.ID" :item="news" :sources="newsSources" />
+      </v-row>
+    </v-container>
+    <NewsLoader v-show="isNewsLoading" />
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
 import { mapState, mapActions } from 'vuex';
-import NewsLoader from '@/components/news/NewsLoader.vue'
+import NewsLoader from '@/components/news/NewsLoader'
+import NewsCard from '@/components/news/NewsCard'
 
 export default {
   name: 'News',
   components: {
-    NewsLoader
+    NewsLoader,
+    NewsCard,
   },
   computed: {
     isAllSelected () {
@@ -73,18 +80,24 @@ export default {
   methods: {
       ...mapActions('newsModule', ['getNewsList']),
       async applySearch(e) {
-          if(this.checkIsSourcesChanged()){
+          if(this.checkIsSourcesChanged() && !this.isNewsLoading){
+            this.isNewsLoading = true;
+            this.newss = [];
+
             this.filter.sources = this.selectedNewsSources;
             const data = {
               sources: this.filter.sources.join(),
               limit: this.filter.limit,
-              prev: this.filter.prev,
-              prevPublished: this.filter.prevPublished
+              prev: null,
+              prevPublished: null
             };
-            console.log(this.filter);
-            console.log(data);
-            //const response = await this.getNewsList(data);
-            //console.log(response);
+
+            const response = await this.getNewsList(data);
+            if(response && response.success) {
+              this.newss = response.data;
+            }
+
+            this.isNewsLoading = false;
           }          
       },
       toggleSelection() {
@@ -97,19 +110,28 @@ export default {
         })
       },
       checkIsSourcesChanged() {
-        const intersected = this.selectedNewsSources.filter(value => -1 !== this.filter.sources.indexOf(value));
-        return intersected.length !== this.selectedNewsSources.length;
+        const array1 = this.selectedNewsSources.length >= this.filter.sources.length ? this.selectedNewsSources : this.filter.sources;
+        const array2 = this.selectedNewsSources.length >= this.filter.sources.length ? this.filter.sources : this.selectedNewsSources;
+        
+        const intersected = array1.filter(value => array2.indexOf(value) !== -1);
+        return array1.length !== array2.length
+              || (intersected.length !== array1.length && intersected.length !== array2.length);
       }
   },
   created() {
-    //this.applySearch();
+    // Set all the sources as the selected
+    this.selectedNewsSources = this.newsSources.map(function(item){
+      return item.id;
+    });
+
+    this.applySearch();
   },
   data() {
     return {
       // This is the filter that is applied before
       filter: {
         sources: [],
-        limit: 10, 
+        limit: 12, 
         prev: null, 
         prevPublished: null,
       },
@@ -125,6 +147,8 @@ export default {
         {id: 3, name: "Sin Chew Daily (星洲日报)"},
       ],
       selectedNewsSources: [],
+      isNewsLoading: false,
+      newss: [],
     }
   }
 }
