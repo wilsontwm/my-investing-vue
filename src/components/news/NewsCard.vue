@@ -48,16 +48,14 @@
             <div v-show="show">
                 <v-divider></v-divider>
 
-                <v-card-text>
-                {{ item.Content }}
-                </v-card-text>
+                <v-card-text v-html="content" />
             </div>
             </v-expand-transition>
         </v-card>
         
         <v-dialog v-model="dialog" max-width="1068" transition="dialog-bottom-transition">
-            <v-toolbar dark color="blue-grey lighten-1">
-                <v-btn icon dark @click="dialog = false">
+            <v-toolbar light color="white">
+                <v-btn icon light @click="dialog = false">
                 <v-icon>mdi-close</v-icon>
                 </v-btn>
             </v-toolbar>
@@ -76,9 +74,7 @@
                     {{ timestamp }}<br />
                     {{ source ? source.name : "" }} 
                 </v-card-subtitle>
-                <v-card-text>
-                    {{ item.Content }}
-                </v-card-text>
+                <v-card-text v-html="content" />
             </v-card>
         </v-dialog>
     </v-col>
@@ -110,6 +106,11 @@ export default {
         },
         hasPic() {
             return this.item.Thumbnail !== "";
+        },
+        content() {
+            var content = this.item.Content.replace(/(?:\r\n|\r|\n)/g, '<br>');
+            
+            return content;
         } 
     },
     methods: {
