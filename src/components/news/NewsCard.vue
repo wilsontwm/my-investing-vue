@@ -28,7 +28,7 @@
             </v-tooltip>
             <v-tooltip top>
                 <template v-slot:activator="{ on }">
-                    <v-btn icon v-on="on">
+                    <v-btn icon @click="dialog = true" v-on="on">
                         <v-icon>mdi-arrow-expand</v-icon>
                     </v-btn>
                 </template>
@@ -54,6 +54,33 @@
             </div>
             </v-expand-transition>
         </v-card>
+        
+        <v-dialog v-model="dialog" max-width="1068" transition="dialog-bottom-transition">
+            <v-toolbar dark color="blue-grey lighten-1">
+                <v-btn icon dark @click="dialog = false">
+                <v-icon>mdi-close</v-icon>
+                </v-btn>
+            </v-toolbar>
+            <v-card>
+                <v-img
+                v-if="hasPic"
+                :src="item.Thumbnail"
+                max-height="500px"
+                max-width="800px"
+                class="mx-auto"
+                ></v-img>
+                <v-card-title class="headline" primary-title>
+                    {{ item.Title }}
+                </v-card-title>
+                <v-card-subtitle>
+                    {{ timestamp }}<br />
+                    {{ source ? source.name : "" }} 
+                </v-card-subtitle>
+                <v-card-text>
+                    {{ item.Content }}
+                </v-card-text>
+            </v-card>
+        </v-dialog>
     </v-col>
 </template>
 <script>
@@ -63,7 +90,9 @@ export default {
     props: ["item", "sources"],
     data: function() {
       return {
-          show: false,
+            show: false,
+            dialog: false,
+            expandedNews: null
       }
     },
     computed: {
@@ -87,6 +116,19 @@ export default {
         openSource() {
             window.open(this.item.URL, "_blank");    
         }
+    },
+    created() {
+        let that = this;
+        document.addEventListener('keyup', function (evt) {
+            if (evt.keyCode === 27) {
+                that.dialog = false;
+            }
+        });
     }
 }
 </script>
+<style scoped>
+.headline {
+    margin-bottom: 12px;
+}
+</style>
