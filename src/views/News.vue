@@ -80,7 +80,7 @@ export default {
   methods: {
       ...mapActions('newsModule', ['getNewsList']),
       async applySearch(e) {
-          if(this.checkIsSourcesChanged() && !this.isNewsLoading){
+          if(!this.isNewsLoading){
             this.isNewsLoading = true;
             this.newss = [];
 
@@ -95,10 +95,33 @@ export default {
             const response = await this.getNewsList(data);
             if(response && response.success) {
               this.newss = response.data;
+              if(this.newss.length > 0) {
+                var last = this.newss[this.newss.length - 1];
+                this.filter.prev = last.ID;
+                this.filter.prevPublished = new Date(last.PublishedAt).getTime() / 1000;
+              }
             }
 
             this.isNewsLoading = false;
           }          
+      },
+      async scrollSearch(e) {
+        if(!this.isNewsLoading) {
+          this.isNewsLoading = true;
+          const data = this.filter;
+
+          const response = await this.getNewsList(data);
+          if(response && response.success) {
+            this.newss = this.newss.concat(response.data);
+            if(this.newss.length > 0) {
+              var last = this.newss[this.newss.length - 1];
+              this.filter.prev = last.ID;
+              this.filter.prevPublished = new Date(last.PublishedAt).getTime() / 1000;
+            }
+          }
+
+          this.isNewsLoading = false;
+        }
       },
       toggleSelection() {
         this.$nextTick(() => {
@@ -123,8 +146,17 @@ export default {
     this.selectedNewsSources = this.newsSources.map(function(item){
       return item.id;
     });
-
+    
     this.applySearch();
+  },
+  mounted() {
+    window.onscroll = () => {
+      let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
+
+      if (bottomOfWindow) {        
+        this.scrollSearch();
+      }
+    };
   },
   data() {
     return {
@@ -136,15 +168,15 @@ export default {
         prevPublished: null,
       },
       newsSources: [
-        {id: 6, name: "Investing.com"},
-        {id: 9, name: "Business Insider"},
-        {id: 4, name: "The Star"},
-        {id: 5, name: "The Edge"},
-        {id: 7, name: "New Straits Times"},
-        {id: 8, name: "Malay Mail"},
-        {id: 1, name: "China Press (中国报)"},
-        {id: 2, name: "Nanyang Siang Pau (南洋商报)"},
-        {id: 3, name: "Sin Chew Daily (星洲日报)"},
+        {id: 6, name: "Investing.com", pic: "nanyang.jpg"},
+        {id: 9, name: "Business Insider", pic: "nanyang.jpg"},
+        {id: 4, name: "The Star", pic: "nanyang.jpg"},
+        {id: 5, name: "The Edge", pic: "nanyang.jpg"},
+        {id: 7, name: "New Straits Times", pic: "nanyang.jpg"},
+        {id: 8, name: "Malay Mail", pic: "nanyang.jpg"},
+        {id: 1, name: "China Press (中国报)", pic: "nanyang.jpg"},
+        {id: 2, name: "Nanyang Siang Pau (南洋商报)", pic: "nanyang.jpg"},
+        {id: 3, name: "Sin Chew Daily (星洲日报)", pic: "nanyang.jpg"},
       ],
       selectedNewsSources: [],
       isNewsLoading: false,

@@ -2,7 +2,7 @@
     <v-col cols="12" md="4">
         <v-card class="mx-auto">
             <v-img
-            :src="item.Thumbnail"
+            :src="hasPic ? item.Thumbnail : require('@/assets/images/noimage.png')"
             height="200px"
             ></v-img>
 
@@ -57,6 +57,7 @@
     </v-col>
 </template>
 <script>
+
 export default {
     name: "NewsCard",
     props: ["item", "sources"],
@@ -77,6 +78,9 @@ export default {
             });
             
             return objects.length > 0 ? objects[0] : null;
+        },
+        hasPic() {
+            return this.item.Thumbnail !== "";
         } 
     },
     methods: {
