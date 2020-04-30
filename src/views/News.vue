@@ -42,6 +42,20 @@
           </v-select>
         </v-col>
       </v-row>
+      <v-row justify="center" no-gutters>
+        <v-col cols="12" sm="3">
+          <v-btn
+            block 
+            :loading="gettingNews"
+            :disabled="gettingNews"
+            @click="submitCrawlNews"
+            color="blue-grey lighten-2 white--text"
+          >
+            Crawl news
+            <v-icon right dark>mdi-spider-thread</v-icon>
+          </v-btn>
+        </v-col>
+      </v-row>
     </v-container>
     <v-container>
       <v-row> 
@@ -78,7 +92,7 @@ export default {
     },
   },
   methods: {
-      ...mapActions('newsModule', ['getNewsList']),
+      ...mapActions('newsModule', ['getNewsList', 'crawlNews']),
       async applySearch(e) {
           if(!this.isNewsLoading){
             this.isNewsLoading = true;
@@ -122,6 +136,12 @@ export default {
 
           this.isNewsLoading = false;
         }
+      },
+      async submitCrawlNews(e) {
+        this.gettingNews = true;
+        const sources = this.selectedNewsSources;
+        await this.crawlNews({sources});
+        this.gettingNews = false;
       },
       toggleSelection() {
         this.$nextTick(() => {
@@ -181,6 +201,7 @@ export default {
       selectedNewsSources: [],
       isNewsLoading: false,
       newss: [],
+      gettingNews: false,
     }
   }
 }

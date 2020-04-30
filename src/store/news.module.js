@@ -6,6 +6,11 @@ const actions = {
         const response = await newsService.getNewsList(sources, limit, prev, prevPublished);
 
         return response;
+    },
+    async crawlNews({commit}, {sources}) {
+        const response = await newsService.crawlNews(sources);
+
+        return response;
     }
 }
 
