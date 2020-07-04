@@ -4,7 +4,7 @@
         <v-card-title class="headline">
             Login
             <v-spacer></v-spacer>
-            <v-btn icon @click="closeLogin()">
+            <v-btn icon @click.stop="closeLogin()">
                 <v-icon>mdi-close</v-icon>
             </v-btn>
         </v-card-title>
@@ -56,7 +56,9 @@
             </v-row>
             <v-row>
                 <v-col cols="12" md="12"> 
-                    <p class="subtitle-2 ">Do not have an account yet? Sign up here.</p>
+                    <p class="subtitle-2 ">Do not have an account yet? Sign up 
+                        <v-btn text color="primary" class="pl-0" @click.stop="openSignup()">here</v-btn>
+                    </p>
                 </v-col>
             </v-row>
         </v-card-text>
@@ -89,9 +91,18 @@ export default {
         }
     },
     methods: {
-        ...mapActions('userModule', ['triggerLogin']),
+        ...mapActions('userModule', ['triggerLogin', 'triggerSignup']),
         closeLogin() {
+            this.reset();
             this.triggerLogin(false);
+        },
+        reset() {
+            this.$refs.form.reset();
+        },
+        openSignup() {
+            this.reset();
+            this.triggerLogin(false);
+            this.triggerSignup(true);
         }
     }
 }

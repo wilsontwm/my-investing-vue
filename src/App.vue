@@ -74,6 +74,7 @@
       <v-btn class="ma-2" outlined color="white" @click.stop="promptLogin"><v-icon left>mdi-account-circle</v-icon> Login</v-btn>
     </v-app-bar>
     <LoginDialog />
+    <SignupDialog />
     <v-content class="container">
       <router-view></router-view>
     </v-content>
@@ -82,12 +83,13 @@
 
 <script>
 import { mapActions } from 'vuex';
-import LoginDialog from '@/components/general/LoginDialog'
+import LoginDialog from '@/components/general/LoginDialog';
+import SignupDialog from '@/components/general/SignupDialog';
 
 export default {
   name: "App",
   components: {
-    LoginDialog,
+    LoginDialog, SignupDialog
   },
   props: {
     //source: String,
