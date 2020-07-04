@@ -4,6 +4,7 @@
       v-model="drawer"
       :clipped="$vuetify.breakpoint.lgAndUp"
       app
+      expand-on-hover
     >
       <v-list dense>
         <template v-for="item in items">          
@@ -59,7 +60,7 @@
     <v-app-bar
       :clipped-left="$vuetify.breakpoint.lgAndUp"
       app
-      color="blue-grey lighten-1"
+      color="#74b9ff"
       dark
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
@@ -69,35 +70,55 @@
       >
         <span class="hidden-sm-and-down">My Investing</span>
       </v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn class="ma-2" outlined color="white" @click.stop="promptLogin"><v-icon left>mdi-account-circle</v-icon> Login</v-btn>
     </v-app-bar>
-    <v-content>
+    <LoginDialog />
+    <v-content class="container">
       <router-view></router-view>
     </v-content>
   </v-app>
 </template>
 
 <script>
-  export default {
-    name: "App",
-    props: {
-      //source: String,
-    },
-    data: () => ({
-      drawer: null,
-      items: [
-        { href: '/', icon: 'mdi-newspaper', text: 'All news' },
-        // { href: '/contacts', icon: 'mdi-contacts', text: 'Contacts' },
-        // { icon: 'mdi-cog', text: 'Settings' },
-        // {
-        //   icon: 'mdi-chevron-up',
-        //   'icon-alt': 'mdi-chevron-down',
-        //   text: 'Labels',
-        //   model: true,
-        //   children: [
-        //     { href: '/create', icon: 'mdi-plus', text: 'Create label' },
-        //   ],
-        // },
-      ],
-    }),
+import { mapActions } from 'vuex';
+import LoginDialog from '@/components/general/LoginDialog'
+
+export default {
+  name: "App",
+  components: {
+    LoginDialog,
+  },
+  props: {
+    //source: String,
+  },
+  data: () => ({
+    drawer: null,
+    items: [
+      { href: '/', icon: 'mdi-newspaper', text: 'All news' },
+      // { href: '/contacts', icon: 'mdi-contacts', text: 'Contacts' },
+      // { icon: 'mdi-cog', text: 'Settings' },
+      // {
+      //   icon: 'mdi-chevron-up',
+      //   'icon-alt': 'mdi-chevron-down',
+      //   text: 'Labels',
+      //   model: true,
+      //   children: [
+      //     { href: '/create', icon: 'mdi-plus', text: 'Create label' },
+      //   ],
+      // },
+    ],
+  }),
+  methods: {
+    ...mapActions('userModule', ['triggerLogin']),
+    promptLogin() {
+      this.triggerLogin(true);
+    }
   }
+}
 </script>
+<style scoped>
+#inspire {
+  background-color: #e9eff1;
+}
+</style>
