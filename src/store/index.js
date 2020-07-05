@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import createPersistedState from "vuex-persistedstate";
+import { generalModule } from './general.module';
 import { newsModule } from './news.module';
 import { userModule } from './user.module';
 
@@ -17,6 +18,6 @@ export default new Vuex.Store({
   actions: {
   },
   modules: {
-    newsModule, userModule
+    generalModule, newsModule, userModule
   }
 })

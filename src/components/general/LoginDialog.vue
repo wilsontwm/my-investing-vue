@@ -12,12 +12,12 @@
         <v-card-text>
             <v-row class="mt-4">
                 <v-col cols="12" md="12">
-                    <v-btn large color="error" width="100%"><v-icon class="mr-2">mdi-google</v-icon>Login with Google</v-btn>
+                    <v-btn large color="error" width="100%" @click.stop="loginWithGoogle()"><v-icon class="mr-2">mdi-google</v-icon>Login with Google</v-btn>
                 </v-col>
             </v-row>
             <v-row>
                 <v-col cols="12" md="12">
-                    <v-btn large color="primary" width="100%"><v-icon class="mr-2">mdi-facebook</v-icon>Login with Facebook</v-btn>
+                    <v-btn large color="primary" width="100%" @click.stop="loginWithFacebook()"><v-icon class="mr-2">mdi-facebook</v-icon>Login with Facebook</v-btn>
                 </v-col>
             </v-row>
             <v-row class="mt-4">    
@@ -91,7 +91,13 @@ export default {
         }
     },
     methods: {
-        ...mapActions('userModule', ['triggerLogin', 'triggerSignup']),
+        ...mapActions('userModule', ['triggerLogin', 'loginWithProvider', 'triggerSignup']),
+        loginWithGoogle() {
+            this.loginWithProvider('google');
+        },
+        loginWithFacebook() {
+            this.loginWithProvider('facebook');
+        },
         closeLogin() {
             this.reset();
             this.triggerLogin(false);

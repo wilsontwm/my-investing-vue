@@ -123,6 +123,9 @@ export default {
                     password: this.password
                 };
                 const response = await this.submitSignup(input);
+
+                // Reset the form
+                this.reset();
             }            
         }
     }
