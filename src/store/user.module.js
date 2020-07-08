@@ -1,5 +1,5 @@
 import { userService } from '../services/user.service';
-const state = {isPromptLogin: false, isPromptSignup: false, user: null};
+const state = {isPromptLogin: false, isLoginInProgress: false, isPromptSignup: false};
 
 const actions = {
     triggerLogin({commit}, on) {
@@ -7,9 +7,9 @@ const actions = {
     },
     async loginWithProvider({commit}, provider) {
         commit('triggerLogin', false);        
-
+        commit('loginRequest', true);
         let popup = {
-            message: "Login in progress", 
+            message: "Logging in", 
             isDismissable: false, 
             isLoading: true,
             timeout: 10000
@@ -17,14 +17,16 @@ const actions = {
         commit('generalModule/showPopup', popup, { root: true });
 
         let response = await userService.login(provider);
-        let user = null;
         if(response.success) {
             commit('generalModule/hidePopup', null, { root: true });
-            console.log(response);
-            /*const name = response.data.user.displayName;
-            const photo = response.data.user.photoURL;
-            user = {name, photo};
-            commit('loginUser', user);*/
+            let user = {
+                name: response.data.Name, 
+                photo: response.data.PicURL, 
+                email: response.data.Email,
+                token: response.data.Token,
+            };
+            commit('loginRequest', false);
+            return user;
         } else {
             popup.message = response.error;
             popup.icon = "mdi-alert-circle-outline";
@@ -33,6 +35,8 @@ const actions = {
             popup.isLoading = false;
             commit('generalModule/showPopup', popup, { root: true });
         }
+        commit('loginRequest', false);
+        return null;
     },
     triggerSignup({commit}, on) {
         commit('triggerSignup', on);
@@ -49,21 +53,20 @@ const actions = {
             iconColor: "primary"
         };
         commit('generalModule/showPopup', popup, { root: true });
-        console.log(name);
-        console.log(email);
-        console.log(password);
         
     },
-    logout({commit}) {
-        userService.logout();
-
-        commit('logoutRequest');
+    async logout({commit}) {
+        const response = await userService.logout();
+        return response;
     }
 }
 
 const mutations = {
     triggerLogin(state, on) {
         state.isPromptLogin = on;
+    },
+    loginRequest(state, on) {
+        state.isLoginInProgress = on;
     },
     loginUser(state, user) {
         state.isPromptLogin = false;

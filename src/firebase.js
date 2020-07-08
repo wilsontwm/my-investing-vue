@@ -22,10 +22,10 @@ const fb = {
         if(serviceProvider == "facebook") {
             provider = new firebase.auth.FacebookAuthProvider();
         }
-        console.log(serviceProvider);
+        
         return firebase.auth().signInWithPopup(provider)
                 .then(function(result) {
-                    return {success: true, data: result};
+                    return {success: true, data: firebase.auth().currentUser};
                 })
                 .catch(function(error){
                     return {success: false, data: null, error: error.message};
@@ -39,6 +39,13 @@ const fb = {
             .catch(function(error) {
                 return {success: false, error: error};
             });
+    },
+    getToken() {
+        return firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function(idToken) {
+            return idToken;
+        }).catch(function(error) {
+            return null;
+        });
     }
 }
 

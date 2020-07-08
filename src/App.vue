@@ -29,7 +29,7 @@
               link
             >
               <v-list-item-action v-if="child.icon">
-                <v-icon>{{ child.icon }}</v-icon>
+                <v-icon color="#0984e3">{{ child.icon }}</v-icon>
               </v-list-item-action>
               <v-list-item-content>
                 <v-list-item-title>
@@ -45,7 +45,7 @@
             link            
           >
             <v-list-item-action>
-              <v-icon>{{ item.icon }}</v-icon>
+              <v-icon color="#0984e3">{{ item.icon }}</v-icon>
             </v-list-item-action>
             <v-list-item-content>
               <v-list-item-title>
@@ -71,7 +71,30 @@
         <span class="hidden-sm-and-down">My Investing</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn class="ma-2" outlined color="white" @click.stop="promptLogin"><v-icon left>mdi-account-circle</v-icon> Login</v-btn>
+      <v-btn v-if="!isUserLogin" class="ma-2" outlined color="white" @click.stop="promptLogin"><v-icon left>mdi-account-circle</v-icon> Login</v-btn>
+      <v-menu v-else offset-y>
+        <template v-slot:activator="{ on, attrs }">
+          <v-avatar
+            color="indigo"
+            v-bind="attrs"
+            v-on="on"
+            :size="36"
+          >
+            <img
+              v-if="user.photo != ''"
+              :src="user.photo"
+              :alt="user.name"
+            >
+            <v-icon v-else dark>mdi-account-circle</v-icon>
+          </v-avatar>
+          
+        </template>
+        <v-list>
+          <v-list-item><v-list-item-title>{{ user.name }}</v-list-item-title></v-list-item>
+          <v-divider></v-divider>
+          <v-list-item @click.stop="promptLogout()"><v-list-item-title>Logout</v-list-item-title></v-list-item>
+        </v-list>
+      </v-menu>
     </v-app-bar>
     <PopupDialog />
     <LoginDialog />
@@ -83,7 +106,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import { PopupDialog, LoginDialog, SignupDialog } from '@/components/general';
 
 export default {
@@ -96,6 +119,7 @@ export default {
   },
   data: () => ({
     drawer: null,
+    user: null,
     items: [
       { href: '/', icon: 'mdi-newspaper', text: 'All news' },
       // { href: '/contacts', icon: 'mdi-contacts', text: 'Contacts' },
@@ -111,10 +135,31 @@ export default {
       // },
     ],
   }),
+  mounted() {
+    if (localStorage.getItem('user')) {
+      try {
+        this.user = JSON.parse(localStorage.getItem('user'));
+      } catch(e) {
+        localStorage.removeItem('user');
+      }
+    }
+  },
+  computed: {
+    isUserLogin: function() {
+        return this.user != undefined;
+    }
+  },
   methods: {
-    ...mapActions('userModule', ['triggerLogin']),
+    ...mapActions('userModule', ['triggerLogin', 'logout']),
     promptLogin() {
       this.triggerLogin(true);
+    },
+    async promptLogout() {
+      const response = await this.logout();
+      if(response.success) {
+        localStorage.removeItem('user');
+        location.reload();
+      }
     }
   }
 }

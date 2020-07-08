@@ -85,18 +85,30 @@ export default {
     computed: {
         ...mapState('userModule', {
             isPromptLogin: state => state.isPromptLogin,
+            isLoginInProgress: state => state.isLoginInProgress,
         }),
         dialog: function() {
-            return this.isPromptLogin;
+            return this.isPromptLogin && !this.isLoginInProgress;
         }
     },
     methods: {
         ...mapActions('userModule', ['triggerLogin', 'loginWithProvider', 'triggerSignup']),
-        loginWithGoogle() {
-            this.loginWithProvider('google');
+        async loginWithGoogle() {
+            const user = await this.loginWithProvider('google');
+            this.storeUser(user);
         },
-        loginWithFacebook() {
-            this.loginWithProvider('facebook');
+        async loginWithFacebook() {
+            const user = await this.loginWithProvider('facebook');
+            this.storeUser(user);
+        },
+        storeUser(user) {
+            if(user != undefined) {
+                localStorage.setItem('user', JSON.stringify(user));
+                // Refresh page
+                location.reload();
+            } else {
+                localStorage.removeItem('user');
+            }
         },
         closeLogin() {
             this.reset();

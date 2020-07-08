@@ -15,7 +15,7 @@ const actions = {
 const mutations = {
     showPopup(state, {message, isDismissable, isLoading, icon, iconColor, timeout}) {
         state.popup.isDisplay = true;
-        state.popup.message = message;
+        state.popup.message = message !== undefined ? message : "Unknown error, please try again later.";
         state.popup.isDismissable = isDismissable;
         state.popup.isLoading = isLoading;
         state.popup.icon = icon !== undefined ? icon : null;
