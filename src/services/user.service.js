@@ -2,7 +2,7 @@ import fb from '@/firebase';
 import { baseService } from './base.service';
 
 export const userService = {
-    login, getToken, logout
+    login, loginWithEmailLink, isSignInWithEmailLink, signInWithEmailLink, getToken, logout
 }
 
 async function login(serviceProvider) {
@@ -14,6 +14,39 @@ async function login(serviceProvider) {
             name: response.data.displayName, 
             email: response.data.email,
             source: serviceProvider,
+            pic: response.data.photoURL, 
+            token: token,
+        };
+        
+        response = await loginAtBackend(user);
+    }
+
+    return response;
+}
+
+function loginWithEmailLink(email) {
+    let url = `${baseService.constants.appUrl}/login/email`;
+    let actionCodeSettings = {
+        url: url,
+        // This must be true.
+        handleCodeInApp: true,
+    };
+    return fb.loginWithEmail(email, actionCodeSettings);  
+}
+
+function isSignInWithEmailLink(href) {
+    return fb.isSignInWithEmailLink(href);
+}
+
+async function signInWithEmailLink(email, href) {
+    let response = await fb.signInWithEmailLink(email, href);
+
+    if(response.success) {
+        const token = await getToken();
+        let user = {
+            name: response.data.displayName ? response.data.displayName : response.data.email, 
+            email: response.data.email,
+            source: "email-link",
             pic: response.data.photoURL, 
             token: token,
         };

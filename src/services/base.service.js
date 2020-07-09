@@ -1,4 +1,5 @@
 const constants = {
+    appUrl: process.env.VUE_APP_URL,
     apiUrl: process.env.VUE_APP_API_URL,
 }
 

@@ -31,6 +31,38 @@ const fb = {
                     return {success: false, data: null, error: error.message};
                 });
     },
+    loginWithEmail(email, actionCodeSettings) {
+        
+        return firebase.auth().sendSignInLinkToEmail(email, actionCodeSettings)
+                .then(function() {
+                    return {success: true, data: email};
+                })
+                .catch(function(error) {
+                    // Some error occurred, you can inspect the code: error.code
+                    return {success: false, data: null, error: error.message};
+                });
+    },
+    isSignInWithEmailLink(href) {
+        return firebase.auth().isSignInWithEmailLink(href);
+    },    
+    signInWithEmailLink(email, href) {
+        // The client SDK will parse the code from the link for you.
+        return firebase.auth().signInWithEmailLink(email, href)
+        .then(function(result) {
+            // You can access the new user via result.user
+            // Additional user info profile not available via:
+            // result.additionalUserInfo.profile == null
+            // You can check if the user is new or existing:
+            // result.additionalUserInfo.isNewUser
+            console.log(result);
+            return {success: true, data: result.user};            
+        })
+        .catch(function(error) {
+            // Some error occurred, you can inspect the code: error.code
+            // Common errors could be invalid email and invalid or expired OTPs.
+            return {success: false, data: null, error: error.message};
+        });
+    },
     logout() {
         return firebase.auth().signOut()
             .then(function() {

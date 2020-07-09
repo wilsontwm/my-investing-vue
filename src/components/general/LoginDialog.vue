@@ -27,7 +27,7 @@
             </v-row>
             <v-row>    
                 <v-col cols="12" md="12">  
-                    <p class="subtitle-2 text-center">Login using email account</p>
+                    <p class="subtitle-2 text-center">Login using email link</p>
                     <v-form ref="form" v-model="valid">
                         <v-text-field 
                             v-model="email"
@@ -38,7 +38,7 @@
                             dense
                             required
                         ></v-text-field>
-                        <v-text-field 
+                        <!--<v-text-field 
                             label="Password" 
                             placeholder="Password" 
                             :rules="passwordRules"
@@ -48,19 +48,19 @@
                             :append-icon="pw ? 'mdi-eye' : 'mdi-eye-off'"
                             @click:append="() => (pw = !pw)"
                             :type="pw ? 'password' : 'text'"
-                        ></v-text-field>
-                        <v-btn large color="success" width="100%">Login</v-btn>
+                        ></v-text-field>-->
+                        <v-btn large color="success" width="100%" @click.stop="handleLogin()">Login</v-btn>
                     
                     </v-form>
                 </v-col>
             </v-row>
-            <v-row>
+            <!--<v-row>
                 <v-col cols="12" md="12"> 
                     <p class="subtitle-2 ">Do not have an account yet? Sign up 
                         <v-btn text color="primary" class="pl-0" @click.stop="openSignup()">here</v-btn>
                     </p>
                 </v-col>
-            </v-row>
+            </v-row>-->
         </v-card-text>
 
       </v-card>
@@ -92,7 +92,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions('userModule', ['triggerLogin', 'loginWithProvider', 'triggerSignup']),
+        ...mapActions('userModule', ['triggerLogin', 'loginWithProvider', 'loginWithEmailLink', 'triggerSignup']),
         async loginWithGoogle() {
             const user = await this.loginWithProvider('google');
             this.storeUser(user);
@@ -116,6 +116,14 @@ export default {
         },
         reset() {
             this.$refs.form.reset();
+        },
+        handleLogin() {
+            this.$refs.form.validate();
+
+            if(this.valid) {
+                this.loginWithEmailLink(this.email);
+                localStorage.setItem('emailForSignIn', this.email);
+            }
         },
         openSignup() {
             this.reset();
