@@ -12,12 +12,12 @@
         <v-card-text>
             <v-row class="mt-4">
                 <v-col cols="12" md="12">
-                    <v-btn large color="error" width="100%" @click.stop="loginWithGoogle()"><v-icon class="mr-2">mdi-google</v-icon>Login with Google</v-btn>
+                    <v-btn large block color="error" @click.stop="loginWithGoogle()"><v-icon class="mr-2">mdi-google</v-icon>Login with Google</v-btn>
                 </v-col>
             </v-row>
             <v-row>
                 <v-col cols="12" md="12">
-                    <v-btn large color="primary" width="100%" @click.stop="loginWithFacebook()"><v-icon class="mr-2">mdi-facebook</v-icon>Login with Facebook</v-btn>
+                    <v-btn large block color="primary" @click.stop="loginWithFacebook()"><v-icon class="mr-2">mdi-facebook</v-icon>Login with Facebook</v-btn>
                 </v-col>
             </v-row>
             <v-row class="mt-4">    
@@ -28,7 +28,7 @@
             <v-row>    
                 <v-col cols="12" md="12">  
                     <p class="subtitle-2 text-center">Login using email link</p>
-                    <v-form ref="form" v-model="valid">
+                    <v-form ref="form" v-model="valid" @submit.prevent="handleLogin()">
                         <v-text-field 
                             v-model="email"
                             label="Email" 
@@ -49,7 +49,7 @@
                             @click:append="() => (pw = !pw)"
                             :type="pw ? 'password' : 'text'"
                         ></v-text-field>-->
-                        <v-btn large color="success" width="100%" @click.stop="handleLogin()">Login</v-btn>
+                        <v-btn type="submit" large block color="success">Login</v-btn>
                     
                     </v-form>
                 </v-col>

@@ -1,5 +1,5 @@
 <template>
-    <v-sheet class="px-3 pt-3 pb-12">
+    <v-sheet class="px-3 pt-3 pb-12" id="news-loader">
         <v-container>
         <v-row>
             <v-col cols="12" md="4">
@@ -38,3 +38,8 @@ export default {
     }
 }
 </script>
+<style scoped>
+#news-loader {
+  background-color: #e9eff1;
+}
+</style>

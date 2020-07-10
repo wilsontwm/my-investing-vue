@@ -1,48 +1,71 @@
 <template>
   <div class="news">
     <v-container class="search-container">
-      <v-row justify="center" no-gutters>
-        <v-col cols="12" sm="6">
-          <v-select
-            v-model="selectedNewsSources"
-            :items="newsSources"
-            item-text="name"
-            item-value="id"
-            label="News sources"
-            append-outer-icon="mdi-magnify"
-            @click:append-outer="applySearch"
-            multiple
-          >
-            <template v-slot:prepend-item>
-              <v-list-item
-                ripple
-                @click="toggleSelection"
-              >
-                <v-list-item-action>
-                  <v-icon :color="selectedNewsSources.length > 0 ? 'indigo darken-4' : ''">{{ icon }}</v-icon>
-                </v-list-item-action>
-                <v-list-item-content>
-                  <v-list-item-title>Select All</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-              <v-divider class="mt-2"></v-divider>
+      <v-row>
+        <v-col cols="11">
+          <h1 class="headline font-weight-light">News feed</h1>
+        </v-col>
+        <v-col cols="1">
+          <v-menu offset-y>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn class="float-right" v-bind="attrs" v-on="on" icon><v-icon>mdi-dots-vertical</v-icon></v-btn>
+              
             </template>
-            <template v-slot:selection="{ item, index }">
-              <v-chip v-if="isAllSelected && index === (newsSources.length - 1)">
-                <span>All</span>
-              </v-chip>
-              <v-chip v-if="!isAllSelected && index < 2">
-                <span>{{ item.name }}</span>
-              </v-chip>
-              <span
-                v-if="!isAllSelected && index === 2"
-                class="grey--text caption"
-              >(+{{ selectedNewsSources.length - 2 }} others)</span>
-            </template>
-          </v-select>
+            <v-list>
+              <v-list-item @click.stop="$refs.scanNewsDialog.dialog = true"><v-list-item-title>Scan news</v-list-item-title></v-list-item>
+            </v-list>
+          </v-menu>        
+          
         </v-col>
       </v-row>
-      <v-row justify="center" no-gutters>
+      <v-row>
+        <v-col cols="12" sm="12">
+          <v-expansion-panels flat>
+            <v-expansion-panel>
+              <v-expansion-panel-header>Filter</v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <v-select
+                  v-model="selectedNewsSources"
+                  :items="newsSources"
+                  item-text="name"
+                  item-value="id"
+                  label="News sources"
+                  multiple
+                >
+                  <template v-slot:prepend-item>
+                    <v-list-item
+                      ripple
+                      @click="toggleSelection"
+                    >
+                      <v-list-item-action>
+                        <v-icon :color="selectedNewsSources.length > 0 ? 'indigo darken-4' : ''">{{ icon }}</v-icon>
+                      </v-list-item-action>
+                      <v-list-item-content>
+                        <v-list-item-title>Select All</v-list-item-title>
+                      </v-list-item-content>
+                    </v-list-item>
+                    <v-divider class="mt-2"></v-divider>
+                  </template>
+                  <template v-slot:selection="{ item, index }">
+                    <v-chip v-if="isAllSelected && index === (newsSources.length - 1)">
+                      <span>All</span>
+                    </v-chip>
+                    <v-chip v-if="!isAllSelected && index < 2">
+                      <span>{{ item.name }}</span>
+                    </v-chip>
+                    <span
+                      v-if="!isAllSelected && index === 2"
+                      class="grey--text caption"
+                    >(+{{ selectedNewsSources.length - 2 }} others)</span>
+                  </template>
+                </v-select>
+                <v-btn color="success" @click.stop="applySearch()">Apply</v-btn>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
+        </v-col>
+      </v-row>
+      <!--<v-row justify="center" no-gutters>
         <v-col cols="12" sm="3">
           <v-btn
             block 
@@ -55,13 +78,12 @@
             <v-icon right dark>mdi-spider-thread</v-icon>
           </v-btn>
         </v-col>
-      </v-row>
-    </v-container>
-    <v-container>
+      </v-row>-->
       <v-row> 
         <NewsCard v-for="news in newss" :key="news.ID" :item="news" :sources="newsSources" />
       </v-row>
     </v-container>
+    <ScanNewsDialog ref="scanNewsDialog" />
     <NewsLoader v-show="isNewsLoading" />
   </div>
 </template>
@@ -71,12 +93,14 @@
 import { mapState, mapActions } from 'vuex';
 import NewsLoader from '@/components/news/NewsLoader'
 import NewsCard from '@/components/news/NewsCard'
+import ScanNewsDialog from '@/components/news/ScanNewsDialog'
 
 export default {
   name: 'News',
   components: {
     NewsLoader,
     NewsCard,
+    ScanNewsDialog
   },
   computed: {
     isAllSelected () {
@@ -92,7 +116,7 @@ export default {
     },
   },
   methods: {
-      ...mapActions('newsModule', ['getNewsList', 'crawlNews']),
+      ...mapActions('newsModule', ['getNewsList']),
       async applySearch(e) {
           if(!this.isNewsLoading){
             this.isNewsLoading = true;
@@ -136,12 +160,6 @@ export default {
 
           this.isNewsLoading = false;
         }
-      },
-      async submitCrawlNews(e) {
-        this.gettingNews = true;
-        const sources = this.selectedNewsSources;
-        await this.crawlNews({sources});
-        this.gettingNews = false;
       },
       toggleSelection() {
         this.$nextTick(() => {
@@ -201,7 +219,6 @@ export default {
       selectedNewsSources: [],
       isNewsLoading: false,
       newss: [],
-      gettingNews: false,
     }
   }
 }

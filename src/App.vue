@@ -62,6 +62,7 @@
       app
       color="#74b9ff"
       dark
+      flat
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title
@@ -121,7 +122,7 @@ export default {
     drawer: null,
     user: null,
     items: [
-      { href: '/', icon: 'mdi-newspaper', text: 'All news' },
+      { href: '/', icon: 'mdi-newspaper', text: 'News feed' },
       // { href: '/contacts', icon: 'mdi-contacts', text: 'Contacts' },
       // { icon: 'mdi-cog', text: 'Settings' },
       // {
@@ -164,7 +165,7 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style>
 #inspire {
   background-color: #e9eff1;
 }
