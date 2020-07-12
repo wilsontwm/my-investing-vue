@@ -4,7 +4,7 @@
         <v-card-title class="headline">
             Login
             <v-spacer></v-spacer>
-            <v-btn icon @click.stop="closeLogin()">
+            <v-btn icon @click="closeLogin()">
                 <v-icon>mdi-close</v-icon>
             </v-btn>
         </v-card-title>

@@ -65,20 +65,6 @@
           </v-expansion-panels>
         </v-col>
       </v-row>
-      <!--<v-row justify="center" no-gutters>
-        <v-col cols="12" sm="3">
-          <v-btn
-            block 
-            :loading="gettingNews"
-            :disabled="gettingNews"
-            @click="submitCrawlNews"
-            color="blue-grey lighten-2 white--text"
-          >
-            Crawl news
-            <v-icon right dark>mdi-spider-thread</v-icon>
-          </v-btn>
-        </v-col>
-      </v-row>-->
       <v-row> 
         <NewsCard v-for="news in newss" :key="news.ID" :item="news" :sources="newsSources" />
       </v-row>

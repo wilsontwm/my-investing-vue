@@ -7,7 +7,7 @@
         <v-card>
             <v-card-title class="headline">
                 <v-spacer></v-spacer>
-                <v-btn icon v-if="popup.isDismissable" @click.stop="hidePopup()">
+                <v-btn icon v-if="popup.isDismissable" @click="hidePopup()">
                     <v-icon>mdi-close</v-icon>
                 </v-btn>
             </v-card-title>

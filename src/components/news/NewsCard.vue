@@ -1,6 +1,6 @@
 <template>
     <v-col cols="12" md="4">
-        <v-card class="mx-auto">
+        <v-card flat class="mx-auto">
             <v-img
             :src="hasPic ? item.Thumbnail : require('@/assets/images/noimage.png')"
             height="200px"
