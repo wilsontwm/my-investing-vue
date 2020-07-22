@@ -35,9 +35,9 @@ export default {
         'account'
     ],
     methods: {
-        ...mapActions('portfolioModule', ['initiateEditAccount']),
+        ...mapActions('portfolioModule', ['initiateManageAccount']),
         editAccount() {
-            this.initiateEditAccount(this.account);
+            this.initiateManageAccount(this.account);
         },
         deleteAccount() {
 

@@ -12,7 +12,14 @@
                 </v-btn>
             </v-card-title>
             <v-card-text>
-                <v-row class="mt-4">    
+                <v-row>
+                    <v-col cols="12" md="12">
+                        <v-btn color="primary" @click.stop="createAccount">
+                            Create account
+                        </v-btn>
+                    </v-col>
+                </v-row>
+                <v-row>    
                     <v-col cols="12" md="12">  
                         <v-simple-table>
                             <template v-slot:default>
@@ -50,5 +57,11 @@ export default {
             accounts: state => state.accounts,
         })
     },
+    methods: {
+         ...mapActions('portfolioModule', ['initiateManageAccount']),
+        createAccount() {
+            this.initiateManageAccount(null);
+        },
+    }
 }
 </script>

@@ -11,8 +11,8 @@ const actions = {
             commit('storeAccounts', response.data);
         }
     },
-    initiateEditAccount({commit}, account) {
-        commit('initiateEditAccount', account);
+    initiateManageAccount({commit}, account) {
+        commit('initiateManageAccount', account);
     },
     exitManageAccount({commit}) {
         commit('exitManageAccount');
@@ -24,6 +24,18 @@ const actions = {
         
         if(response.success) {
             commit('updateAccount', response.data);
+        }
+        commit('setIsRequestInProgress', false);
+
+        return response;
+    },    
+    async createAccount({commit}, {title}) {
+        commit('setIsRequestInProgress', true);
+
+        let response = await portfolioService.createAccount({title});
+        
+        if(response.success) {
+            commit('createAccount', response.data);
         }
         commit('setIsRequestInProgress', false);
 
@@ -40,7 +52,7 @@ const mutations = {
     clearAccounts(state) {
         state.accounts = [];
     },
-    initiateEditAccount(state, account) {
+    initiateManageAccount(state, account) {
         state.activeAccount = account;
         state.isTriggerManageAccountDialog = true;
     },
@@ -50,6 +62,9 @@ const mutations = {
     },
     setIsRequestInProgress(state, on) {
         state.isRequestInProgress = on;
+    },
+    createAccount(state, account) {
+        state.accounts.push(account);
     },
     updateAccount(state, account) {
         let accounts = state.accounts;

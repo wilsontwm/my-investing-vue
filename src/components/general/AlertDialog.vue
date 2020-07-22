@@ -9,7 +9,7 @@
     >
         {{ text }}
         <v-spacer></v-spacer>
-        <v-btn dark icon v-bind="attrs" @click="snackbar = false">
+        <v-btn dark icon @click="snackbar = false">
             <v-icon>mdi-close</v-icon>
         </v-btn>
     </v-snackbar>

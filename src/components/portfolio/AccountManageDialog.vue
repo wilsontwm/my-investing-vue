@@ -38,7 +38,7 @@ export default {
     name: "AccountManageDialog",
     data: () => ({
         valid: false,
-        title: String,
+        title: '',
         titleRules: [
             v => !!v || 'Account name is required',
         ],
@@ -55,7 +55,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions('portfolioModule', ['exitManageAccount', 'updateAccount']),
+        ...mapActions('portfolioModule', ['exitManageAccount', 'createAccount', 'updateAccount']),
         ...mapActions('generalModule', ['showSnackbar']),
         async handleSubmit() {
             this.$refs.form.validate();
@@ -77,6 +77,17 @@ export default {
                     }
                 } else {
                     // Create case
+                    let data = {
+                        title: this.title,
+                    }
+
+                    let response = await this.createAccount(data);
+                    if(response.success) {
+                        this.exitManageAccount();
+                        this.showSnackbar({text: "You have successfully created a new account.", color: "success"});
+                    } else {
+                        this.showSnackbar({text: response.message, color: "error"});
+                    }
                 }
             }
         }
