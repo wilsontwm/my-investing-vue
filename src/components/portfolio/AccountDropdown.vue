@@ -24,17 +24,19 @@
         </v-select>
         <AccountDialog ref="accountDialog" />
         <AccountManageDialog ref="accountManageDialog" />
+        <AccountDeleteDialog ref="accountDeleteDialog" />
     </div>
 </template>
 <script>
 import { mapState, mapActions } from 'vuex';
 import AccountDialog from '@/components/portfolio/AccountDialog';
 import AccountManageDialog from '@/components/portfolio/AccountManageDialog';
+import AccountDeleteDialog from '@/components/portfolio/AccountDeleteDialog';
 
 export default {
     name: "AccountDropdown",
     components: {
-        AccountDialog, AccountManageDialog
+        AccountDialog, AccountManageDialog, AccountDeleteDialog
     },
     data: () => ({
         selectedAccount: null,

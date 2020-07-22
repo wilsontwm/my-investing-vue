@@ -25,22 +25,16 @@
 import {  mapActions } from 'vuex';
 export default {
     name: "AccountItem",
-    data: () => ({
-        
-    }),
-    components: {
-        
-    },
     props: [
         'account'
     ],
     methods: {
-        ...mapActions('portfolioModule', ['initiateManageAccount']),
+        ...mapActions('portfolioModule', ['initiateManageAccount', 'initiateDeleteAccount']),
         editAccount() {
             this.initiateManageAccount(this.account);
         },
         deleteAccount() {
-
+            this.initiateDeleteAccount(this.account);
         }
     }
 }

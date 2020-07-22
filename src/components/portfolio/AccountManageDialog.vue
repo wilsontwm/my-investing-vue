@@ -92,6 +92,9 @@ export default {
             }
         }
     },
+    created() {
+        this.title = '';
+    },
     watch: {
         account: function(val) {
             this.title = val && val.Title ? val.Title : '';
