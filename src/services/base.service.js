@@ -10,6 +10,10 @@ const actions = {
             if(!response.ok || (data && !data.success)) {
                 // Unauthorized access
                 if(response.status === 401) {
+                    // Remove the user store in local storage and redirect to login page
+                    localStorage.removeItem('user');
+                    window.location.href = '/login';
+                    return null;
                 }
 
                 const error = (data && data.error) || response.statusText;
@@ -25,6 +29,15 @@ const actions = {
             data: null
         };
         return data;
+    },
+    getAuthToken() {
+        let user = JSON.parse(localStorage.getItem('user'));
+        
+        if (user && user.token) {
+            return 'Bearer ' + user.token;
+        }
+
+        return '';
     }
 }
 
