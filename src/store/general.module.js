@@ -1,4 +1,19 @@
-const state = {popup: {isDisplay: false, isLoading: false, message: '', isDismissable: false, icon: null, iconColor: '', timeout: 5000}};
+const state = {
+    popup: {
+        isDisplay: false, 
+        isLoading: false, 
+        message: '', 
+        isDismissable: false, 
+        icon: null, 
+        iconColor: '', 
+        timeout: 5000
+    },
+    snackbar: {
+        isDisplay: false,
+        color: '',
+        text: ''
+    }
+};
 
 const actions = {
     showPopup({commit}, {message, isDismissable, icon, iconColor}) {
@@ -9,6 +24,12 @@ const actions = {
     },
     allowDismissablePopup({commit}) {
         commit('allowDismissablePopup');
+    },
+    showSnackbar({commit}, {text, color}) {
+        commit('showSnackbar', {text, color});
+    },
+    hideSnackbar({commit}) {
+        commit('hideSnackbar');
     }
 }
 
@@ -27,6 +48,16 @@ const mutations = {
     },
     allowDismissablePopup(state) {
         state.popup.isDismissable = true;
+    },
+    showSnackbar(state, {text, color}) {
+        state.snackbar.isDisplay = true;
+        state.snackbar.color = color;
+        state.snackbar.text = text;
+    },
+    hideSnackbar(state) {
+        state.snackbar.isDisplay = false;
+        state.snackbar.color = '';
+        state.snackbar.text = '';
     }
 }
 

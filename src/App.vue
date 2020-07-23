@@ -29,7 +29,7 @@
               link
             >
               <v-list-item-action v-if="child.icon">
-                <v-icon color="#0984e3">{{ child.icon }}</v-icon>
+                <v-icon>{{ child.icon }}</v-icon>
               </v-list-item-action>
               <v-list-item-content>
                 <v-list-item-title>
@@ -45,7 +45,7 @@
             link            
           >
             <v-list-item-action>
-              <v-icon color="#0984e3">{{ item.icon }}</v-icon>
+              <v-icon>{{ item.icon }}</v-icon>
             </v-list-item-action>
             <v-list-item-content>
               <v-list-item-title>
@@ -100,6 +100,7 @@
     <PopupDialog />
     <LoginDialog />
     <SignupDialog />
+    <AlertDialog />
     <v-content class="container">
       <router-view></router-view>
     </v-content>
@@ -108,12 +109,12 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
-import { PopupDialog, LoginDialog, SignupDialog } from '@/components/general';
+import { PopupDialog, LoginDialog, SignupDialog, AlertDialog } from '@/components/general';
 
 export default {
   name: "App",
   components: {
-    PopupDialog, LoginDialog, SignupDialog
+    PopupDialog, LoginDialog, SignupDialog, AlertDialog
   },
   props: {
     //source: String,
@@ -123,17 +124,17 @@ export default {
     user: null,
     items: [
       { href: '/', icon: 'mdi-newspaper', text: 'News feed' },
-      // { href: '/contacts', icon: 'mdi-contacts', text: 'Contacts' },
-      // { icon: 'mdi-cog', text: 'Settings' },
-      // {
-      //   icon: 'mdi-chevron-up',
-      //   'icon-alt': 'mdi-chevron-down',
-      //   text: 'Labels',
-      //   model: true,
-      //   children: [
-      //     { href: '/create', icon: 'mdi-plus', text: 'Create label' },
-      //   ],
-      // },
+      {
+        icon: 'mdi-chevron-up',
+        'icon-alt': 'mdi-chevron-down',
+        text: 'Portfolio',
+        model: false,
+        children: [
+          { href: '/portfolio/summary', icon: 'mdi-chart-areaspline', text: 'Summary' },
+          { href: '/portfolio/stocks', icon: 'mdi-finance', text: 'Stocks' },
+          { href: '/portfolio/fund', icon: 'mdi-currency-usd', text: 'Fund' },
+        ],
+      },
     ],
   }),
   mounted() {

@@ -5,10 +5,11 @@ This is an investment portal developed using Vue. It's designed and built with a
 
 Currently, it has the following features (new features to be added):
 1. News feed from various sources (Business Insider, Investing.com, The Edge etc)
-2. More to come...
+2. Stocks portfolio tracker
+3. More to come
 
 ## Screenshot
-![Screenshot_2020-04-30 vue-news](https://user-images.githubusercontent.com/49806519/80727038-cacb3a80-8b37-11ea-8718-966fd1f060ba.png)
+![Screenshot_2020-07-23 vue-news](https://user-images.githubusercontent.com/49806519/88295879-93cc8580-cd30-11ea-8a26-585ef1e2f886.png)
 
 ## Project setup
 ```

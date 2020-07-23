@@ -1,10 +1,10 @@
 <template>
-    <v-dialog persistent v-model="dialog" max-width="368">
+    <v-dialog v-model="dialog" max-width="368">
       <v-card>
         <v-card-title class="headline">
             Login
             <v-spacer></v-spacer>
-            <v-btn icon @click="closeLogin()">
+            <v-btn icon @click.stop="dialog = false">
                 <v-icon>mdi-close</v-icon>
             </v-btn>
         </v-card-title>
@@ -38,29 +38,11 @@
                             dense
                             required
                         ></v-text-field>
-                        <!--<v-text-field 
-                            label="Password" 
-                            placeholder="Password" 
-                            :rules="passwordRules"
-                            outlined 
-                            dense
-                            required
-                            :append-icon="pw ? 'mdi-eye' : 'mdi-eye-off'"
-                            @click:append="() => (pw = !pw)"
-                            :type="pw ? 'password' : 'text'"
-                        ></v-text-field>-->
                         <v-btn type="submit" large block color="success">Login</v-btn>
                     
                     </v-form>
                 </v-col>
             </v-row>
-            <!--<v-row>
-                <v-col cols="12" md="12"> 
-                    <p class="subtitle-2 ">Do not have an account yet? Sign up 
-                        <v-btn text color="primary" class="pl-0" @click.stop="openSignup()">here</v-btn>
-                    </p>
-                </v-col>
-            </v-row>-->
         </v-card-text>
 
       </v-card>
@@ -86,10 +68,11 @@ export default {
         ...mapState('userModule', {
             isPromptLogin: state => state.isPromptLogin,
             isLoginInProgress: state => state.isLoginInProgress,
-        }),
-        dialog: function() {
-            return this.isPromptLogin && !this.isLoginInProgress;
-        }
+        }),        
+        dialog: {
+            get () { return this.isPromptLogin && !this.isLoginInProgress; },
+            set (value) { this.closeLogin(); }
+        },
     },
     methods: {
         ...mapActions('userModule', ['triggerLogin', 'loginWithProvider', 'loginWithEmailLink', 'triggerSignup']),

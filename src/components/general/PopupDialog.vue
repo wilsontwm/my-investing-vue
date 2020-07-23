@@ -2,12 +2,12 @@
     <v-dialog 
         v-model="dialog" 
         max-width="368"
-        persistent
+        :persistent="!popup.isDismissable"
     >
         <v-card>
             <v-card-title class="headline">
                 <v-spacer></v-spacer>
-                <v-btn icon v-if="popup.isDismissable" @click="hidePopup()">
+                <v-btn icon v-if="popup.isDismissable" @click="dialog = false">
                     <v-icon>mdi-close</v-icon>
                 </v-btn>
             </v-card-title>
@@ -48,20 +48,23 @@ export default {
     computed: {
         ...mapState('generalModule', {
             popup: state => state.popup,
-        }),
-        dialog: function() {
-            var value = this.popup.isDisplay;
-            if(value) {
-                setTimeout(() => {
-                    // Show the close icon when it's taken more than 5 seconds
-                    if(this.popup.isDisplay && !this.popup.isDismissable) {
-                        this.allowDismissablePopup();
-                    }
-                }, this.popup.timeout);
-            }
+        }),                
+        dialog: {
+            get () { 
+                var value = this.popup.isDisplay;
+                if(value) {
+                    setTimeout(() => {
+                        // Show the close icon when it's taken more than 5 seconds
+                        if(this.popup.isDisplay && !this.popup.isDismissable) {
+                            this.allowDismissablePopup();
+                        }
+                    }, this.popup.timeout);
+                }
 
-            return value;
-        }
+                return value;
+            },
+            set (value) { this.hidePopup(); }
+        },
     },
     methods: {
         ...mapActions('generalModule', ['hidePopup', 'allowDismissablePopup']),
