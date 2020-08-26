@@ -22,7 +22,6 @@ jobs:
             if [[ ! " ${VERSIONS[@]} " =~ $CURRENT_VERSION ]]; then
               npm publish
             fi
-
 workflows:
   version: 2
   build:
